@@ -224,8 +224,7 @@
   </div>
 
   <script>
-    // GANTI TEKS DI BAWAH INI DENGAN URL WEB APP GOOGLE APPS SCRIPT KAMU
-    const API_URL = 'https://script.google.com/macros/s/AKfycbyqxMhaU246-sJPy_pOzq1WLlMlD8DZwb-lX4zZGQjdhPxkFUwuusdT0VEvsrvWkQVj/exec';
+    const API_URL = 'https://script.google.com/macros/s/AKfycbzlJb9JYiz9Z4Kt89A14PCMY2quoBdQHbuIK8UNSL8iB77-3vQpeA4IvmAOYAllgNUH/exec';
 
     let kelasTerpilih = '';
 
@@ -239,6 +238,9 @@
 
       fetch(API_URL, {
         method: 'POST',
+        headers: {
+          'Content-Type': 'text/plain;charset=utf-8',
+        },
         body: JSON.stringify({ action: 'getSiswaByKelas', kelas: kelas })
       })
       .then(res => res.json())
@@ -258,7 +260,7 @@
 
           document.getElementById('viewSiswa').classList.remove('d-none');
         } else {
-          tampilkanAlert('danger', 'Gagal memuat siswa / data kelas kosong.');
+          tampilkanAlert('danger', 'Data siswa kelas ' + kelas + ' tidak ditemukan di Sheet.');
           kembaliKeKelas();
         }
       })
@@ -276,6 +278,9 @@
 
       fetch(API_URL, {
         method: 'POST',
+        headers: {
+          'Content-Type': 'text/plain;charset=utf-8',
+        },
         body: JSON.stringify({ action: 'simpanAbsen', nama: nama, kelas: kelasTerpilih })
       })
       .then(res => res.json())
@@ -290,7 +295,7 @@
       })
       .catch(err => {
         document.getElementById('viewLoading').classList.add('d-none');
-        tampilkanAlert('danger', 'Gagal terhubung ke server.');
+        tampilkanAlert('danger', 'Koneksi terputus. Coba lagi.');
         kembaliKeKelas();
       });
     }
