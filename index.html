@@ -9,7 +9,6 @@
   <style>
     :root {
       --primary-color: #4f46e5;
-      --primary-hover: #4338ca;
       --bg-color: #f8fafc;
       --card-bg: #ffffff;
       --text-main: #1e293b;
@@ -81,7 +80,6 @@
       justify-content: space-between;
     }
 
-    /* Grid Tombol Kelas */
     .grid-kelas {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -107,7 +105,6 @@
       transform: translateY(-2px);
     }
 
-    /* List Tombol Siswa */
     .list-siswa {
       display: flex;
       flex-direction: column;
@@ -161,7 +158,6 @@
       display: none;
     }
 
-    /* Custom Scrollbar */
     .list-siswa::-webkit-scrollbar {
       width: 6px;
     }
@@ -224,7 +220,6 @@
   </div>
 
   <script>
-    // URL Web App Apps Script Terbaru
     const API_URL = 'https://script.google.com/macros/s/AKfycbzlJb9JYiz9Z4Kt89A14PCMY2quoBdQHbuIK8UNSL8iB77-3vQpeA4IvmAOYAllgNUH/exec';
 
     let kelasTerpilih = '';
@@ -237,13 +232,10 @@
       document.getElementById('viewLoading').classList.remove('d-none');
       document.getElementById('loadingText').innerText = 'Memuat siswa kelas ' + kelas + '...';
 
-      fetch(API_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'text/plain;charset=utf-8',
-        },
-        body: JSON.stringify({ action: 'getSiswaByKelas', kelas: kelas })
-      })
+      // Menggunakan GET request agar tidak terhadang CORS
+      const targetUrl = `${API_URL}?action=getSiswaByKelas&kelas=${encodeURIComponent(kelas)}`;
+
+      fetch(targetUrl)
       .then(res => res.json())
       .then(res => {
         document.getElementById('viewLoading').classList.add('d-none');
@@ -267,7 +259,7 @@
       })
       .catch(err => {
         document.getElementById('viewLoading').classList.add('d-none');
-        tampilkanAlert('danger', 'Koneksi terputus. Coba lagi.');
+        tampilkanAlert('danger', 'Gagal memuat data. Periksa jaringan.');
         kembaliKeKelas();
       });
     }
@@ -277,13 +269,9 @@
       document.getElementById('viewLoading').classList.remove('d-none');
       document.getElementById('loadingText').innerText = 'Mengirim absensi ' + nama + '...';
 
-      fetch(API_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'text/plain;charset=utf-8',
-        },
-        body: JSON.stringify({ action: 'simpanAbsen', nama: nama, kelas: kelasTerpilih })
-      })
+      const targetUrl = `${API_URL}?action=simpanAbsen&nama=${encodeURIComponent(nama)}&kelas=${encodeURIComponent(kelasTerpilih)}`;
+
+      fetch(targetUrl)
       .then(res => res.json())
       .then(res => {
         document.getElementById('viewLoading').classList.add('d-none');
@@ -296,7 +284,7 @@
       })
       .catch(err => {
         document.getElementById('viewLoading').classList.add('d-none');
-        tampilkanAlert('danger', 'Koneksi terputus. Coba lagi.');
+        tampilkanAlert('danger', 'Gagal terhubung ke server.');
         kembaliKeKelas();
       });
     }
