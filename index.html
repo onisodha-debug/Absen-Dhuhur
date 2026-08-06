@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Presensi Online Sholat Dhuhur - UPT SMPN 3 Sutojayan</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.net/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: #4f46e5;
+      --primary-hover: #4338ca;
+      --bg-color: #f8fafc;
+      --card-bg: #ffffff;
+      --text-main: #1e293b;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 15px;
+    }
+
+    .main-card {
+      background: var(--card-bg);
+      border: none;
+      border-radius: 20px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08);
+      overflow: hidden;
+      max-width: 480px;
+      width: 100%;
+    }
+
+    .card-header-custom {
+      background: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%);
+      color: white;
+      padding: 24px 20px;
+      text-align: center;
+    }
+
+    .card-header-custom i {
+      font-size: 2.2rem;
+      margin-bottom: 8px;
+    }
+
+    .card-header-custom h4 {
+      font-weight: 800;
+      margin-bottom: 4px;
+      font-size: 1.2rem;
+    }
+
+    .card-header-custom h5 {
+      font-weight: 600;
+      font-size: 0.95rem;
+      opacity: 0.95;
+      margin-bottom: 2px;
+    }
+
+    .card-header-custom p {
+      font-size: 0.8rem;
+      opacity: 0.85;
+      margin: 0;
+    }
+
+    .card-body-custom {
+      padding: 24px 20px;
+    }
+
+    .section-title {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: #475569;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* Grid Tombol Kelas */
+    .grid-kelas {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .btn-kelas {
+      background-color: #f1f5f9;
+      color: #1e293b;
+      border: 2px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 14px 10px;
+      font-weight: 700;
+      font-size: 1.1rem;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .btn-kelas:hover, .btn-kelas:active {
+      background-color: var(--primary-color);
+      color: white;
+      border-color: var(--primary-color);
+      transform: translateY(-2px);
+    }
+
+    /* List Tombol Siswa */
+    .list-siswa {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 320px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .btn-siswa {
+      background-color: #ffffff;
+      color: #334155;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      text-align: left;
+      transition: all 0.15s ease;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+    }
+
+    .btn-siswa:hover {
+      background-color: #e0e7ff;
+      border-color: var(--primary-color);
+      color: var(--primary-color);
+    }
+
+    .btn-back {
+      background-color: transparent;
+      border: none;
+      color: var(--primary-color);
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .btn-back:hover {
+      text-decoration: underline;
+    }
+
+    .alert-custom {
+      border-radius: 12px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-align: center;
+      display: none;
+    }
+
+    /* Custom Scrollbar */
+    .list-siswa::-webkit-scrollbar {
+      width: 6px;
+    }
+    .list-siswa::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container d-flex justify-content-center">
+    <div class="main-card">
+      
+      <!-- Header -->
+      <div class="card-header-custom">
+        <i class="fa-solid fa-mosque"></i>
+        <h4>PRESENSI ONLINE SHOLAT DHUHUR</h4>
+        <h5>UPT SMP NEGERI 3 SUTOJAYAN</h5>
+        <p>Sistem Cepat & Otomatis</p>
+      </div>
+
+      <!-- Body -->
+      <div class="card-body-custom">
+        
+        <!-- Alert Box -->
+        <div id="alertBox" class="alert alert-custom mb-3" role="alert"></div>
+
+        <!-- Tampilan 1: Pilih Kelas -->
+        <div id="viewKelas">
+          <div class="section-title">
+            <span><i class="fa-solid fa-school me-1"></i> Pilih Kelas Siswa:</span>
+          </div>
+          <div class="grid-kelas">
+            <button class="btn btn-kelas" onclick="pilihKelas('7A')">7A</button>
+            <button class="btn btn-kelas" onclick="pilihKelas('8A')">8A</button>
+            <button class="btn btn-kelas" onclick="pilihKelas('8B')">8B</button>
+            <button class="btn btn-kelas" onclick="pilihKelas('9A')">9A</button>
+            <button class="btn btn-kelas" onclick="pilihKelas('9B')">9B</button>
+          </div>
+        </div>
+
+        <!-- Tampilan 2: Pilih Nama Siswa -->
+        <div id="viewSiswa" class="d-none">
+          <div class="section-title">
+            <span><i class="fa-solid fa-user-check me-1"></i> Siswa Kelas <strong id="labelKelas"></strong>:</span>
+            <button class="btn-back" onclick="kembaliKeKelas()"><i class="fa-solid fa-arrow-left"></i> Ganti Kelas</button>
+          </div>
+          <div id="containerSiswa" class="list-siswa"></div>
+        </div>
+
+        <!-- Tampilan 3: Loading -->
+        <div id="viewLoading" class="text-center py-4 d-none">
+          <div class="spinner-border text-primary mb-2" role="status" style="width: 3rem; height: 3rem;"></div>
+          <h6 class="fw-bold text-slate-700" id="loadingText">Mencatat Kehadiran...</h6>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // GANTI TEKS DI BAWAH INI DENGAN URL WEB APP GOOGLE APPS SCRIPT KAMU
+    const API_URL = 'https://script.google.com/macros/s/AKfycbyqxMhaU246-sJPy_pOzq1WLlMlD8DZwb-lX4zZGQjdhPxkFUwuusdT0VEvsrvWkQVj/exec';
+
+    let kelasTerpilih = '';
+
+    function pilihKelas(kelas) {
+      kelasTerpilih = kelas;
+      document.getElementById('labelKelas').innerText = kelas;
+      
+      document.getElementById('viewKelas').classList.add('d-none');
+      document.getElementById('viewLoading').classList.remove('d-none');
+      document.getElementById('loadingText').innerText = 'Memuat siswa kelas ' + kelas + '...';
+
+      fetch(API_URL, {
+        method: 'POST',
+        body: JSON.stringify({ action: 'getSiswaByKelas', kelas: kelas })
+      })
+      .then(res => res.json())
+      .then(res => {
+        document.getElementById('viewLoading').classList.add('d-none');
+        if(res.status === 'success' && res.data.length > 0) {
+          var container = document.getElementById('containerSiswa');
+          container.innerHTML = '';
+          
+          res.data.forEach(function(nama) {
+            var btn = document.createElement('button');
+            btn.className = 'btn btn-siswa';
+            btn.innerHTML = `<span>${nama}</span> <i class="fa-solid fa-chevron-right text-muted fs-6"></i>`;
+            btn.onclick = function() { submitAbsenDirect(nama); };
+            container.appendChild(btn);
+          });
+
+          document.getElementById('viewSiswa').classList.remove('d-none');
+        } else {
+          tampilkanAlert('danger', 'Gagal memuat siswa / data kelas kosong.');
+          kembaliKeKelas();
+        }
+      })
+      .catch(err => {
+        document.getElementById('viewLoading').classList.add('d-none');
+        tampilkanAlert('danger', 'Koneksi terputus. Coba lagi.');
+        kembaliKeKelas();
+      });
+    }
+
+    function submitAbsenDirect(nama) {
+      document.getElementById('viewSiswa').classList.add('d-none');
+      document.getElementById('viewLoading').classList.remove('d-none');
+      document.getElementById('loadingText').innerText = 'Mengirim absensi ' + nama + '...';
+
+      fetch(API_URL, {
+        method: 'POST',
+        body: JSON.stringify({ action: 'simpanAbsen', nama: nama, kelas: kelasTerpilih })
+      })
+      .then(res => res.json())
+      .then(res => {
+        document.getElementById('viewLoading').classList.add('d-none');
+        if(res.status === 'success') {
+          tampilkanAlert('success', '✓ ' + nama + ' (' + kelasTerpilih + ') Berhasil Absen & WA Terkirim!');
+        } else {
+          tampilkanAlert('danger', 'Gagal menyimpan absensi.');
+        }
+        kembaliKeKelas();
+      })
+      .catch(err => {
+        document.getElementById('viewLoading').classList.add('d-none');
+        tampilkanAlert('danger', 'Gagal terhubung ke server.');
+        kembaliKeKelas();
+      });
+    }
+
+    function kembaliKeKelas() {
+      document.getElementById('viewSiswa').classList.add('d-none');
+      document.getElementById('viewLoading').classList.add('d-none');
+      document.getElementById('viewKelas').classList.remove('d-none');
+    }
+
+    function tampilkanAlert(tipe, pesan) {
+      var alertBox = document.getElementById('alertBox');
+      alertBox.className = `alert alert-${tipe} alert-custom d-block`;
+      alertBox.innerHTML = pesan;
+
+      setTimeout(function() {
+        alertBox.className = "alert alert-custom d-none";
+      }, 3500);
+    }
+  </script>
+
+</body>
+</html>
