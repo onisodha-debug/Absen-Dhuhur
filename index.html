@@ -20,9 +20,9 @@
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       min-height: 100vh;
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       justify-content: center;
-      padding: 15px;
+      padding: 20px 10px;
     }
 
     .main-card {
@@ -31,7 +31,7 @@
       border-radius: 20px;
       box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08);
       overflow: hidden;
-      max-width: 480px;
+      max-width: 500px;
       width: 100%;
     }
 
@@ -67,7 +67,7 @@
     }
 
     .card-body-custom {
-      padding: 24px 20px;
+      padding: 20px;
     }
 
     .section-title {
@@ -75,15 +75,13 @@
       font-size: 0.95rem;
       color: #475569;
       margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
     }
 
     .grid-kelas {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 10px;
+      margin-bottom: 20px;
     }
 
     .btn-kelas {
@@ -91,63 +89,50 @@
       color: #1e293b;
       border: 2px solid #e2e8f0;
       border-radius: 12px;
-      padding: 14px 10px;
+      padding: 12px 8px;
       font-weight: 700;
-      font-size: 1.1rem;
+      font-size: 1rem;
       transition: all 0.2s ease;
       cursor: pointer;
     }
 
-    .btn-kelas:hover, .btn-kelas:active {
+    .btn-kelas.active {
       background-color: var(--primary-color);
       color: white;
       border-color: var(--primary-color);
-      transform: translateY(-2px);
     }
 
     .list-siswa {
       display: flex;
       flex-direction: column;
-      gap: 8px;
-      max-height: 320px;
+      gap: 10px;
+      max-height: 380px;
       overflow-y: auto;
       padding-right: 4px;
     }
 
-    .btn-siswa {
+    .item-siswa {
       background-color: #ffffff;
-      color: #334155;
-      border: 1px solid #cbd5e1;
-      border-radius: 10px;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
       padding: 12px 16px;
-      font-weight: 600;
-      font-size: 0.95rem;
-      text-align: left;
-      transition: all 0.15s ease;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      cursor: pointer;
     }
 
-    .btn-siswa:hover {
-      background-color: #e0e7ff;
-      border-color: var(--primary-color);
-      color: var(--primary-color);
-    }
-
-    .btn-back {
-      background-color: transparent;
-      border: none;
-      color: var(--primary-color);
+    .nama-siswa {
       font-weight: 600;
-      font-size: 0.85rem;
-      cursor: pointer;
-      padding: 0;
+      font-size: 0.95rem;
+      color: #334155;
     }
 
-    .btn-back:hover {
-      text-decoration: underline;
+    .btn-absen {
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      padding: 6px 14px;
+      transition: all 0.2s ease;
     }
 
     .alert-custom {
@@ -157,142 +142,149 @@
       text-align: center;
       display: none;
     }
-
-    .list-siswa::-webkit-scrollbar {
-      width: 6px;
-    }
-    .list-siswa::-webkit-scrollbar-thumb {
-      background: #cbd5e1;
-      border-radius: 10px;
-    }
   </style>
 </head>
 <body>
 
-  <div class="container d-flex justify-content-center">
-    <div class="main-card">
+  <div class="main-card">
+    
+    <!-- Header -->
+    <div class="card-header-custom">
+      <i class="fa-solid fa-mosque"></i>
+      <h4>PRESENSI ONLINE SHOLAT DHUHUR</h4>
+      <h5>UPT SMP NEGERI 3 SUTOJAYAN</h5>
+      <p>Sistem Cepat & Otomatis</p>
+    </div>
+
+    <!-- Body -->
+    <div class="card-body-custom">
       
-      <!-- Header -->
-      <div class="card-header-custom">
-        <i class="fa-solid fa-mosque"></i>
-        <h4>PRESENSI ONLINE SHOLAT DHUHUR</h4>
-        <h5>UPT SMP NEGERI 3 SUTOJAYAN</h5>
-        <p>Sistem Cepat & Otomatis</p>
+      <!-- Alert Box -->
+      <div id="alertBox" class="alert alert-custom mb-3" role="alert"></div>
+
+      <!-- Pilih Kelas -->
+      <div class="section-title">
+        <i class="fa-solid fa-school me-1"></i> Pilih Kelas:
+      </div>
+      <div class="grid-kelas">
+        <button class="btn btn-kelas" onclick="pilihKelas('7a', this)">7a</button>
+        <button class="btn btn-kelas" onclick="pilihKelas('8a', this)">8a</button>
+        <button class="btn btn-kelas" onclick="pilihKelas('8b', this)">8b</button>
+        <button class="btn btn-kelas" onclick="pilihKelas('9a', this)">9a</button>
+        <button class="btn btn-kelas" onclick="pilihKelas('9b', this)">9b</button>
       </div>
 
-      <!-- Body -->
-      <div class="card-body-custom">
-        
-        <!-- Alert Box -->
-        <div id="alertBox" class="alert alert-custom mb-3" role="alert"></div>
-
-        <!-- Tampilan 1: Pilih Kelas -->
-        <div id="viewKelas">
-          <div class="section-title">
-            <span><i class="fa-solid fa-school me-1"></i> Pilih Kelas Siswa:</span>
-          </div>
-          <div class="grid-kelas">
-            <button class="btn btn-kelas" onclick="pilihKelas('7A')">7A</button>
-            <button class="btn btn-kelas" onclick="pilihKelas('8A')">8A</button>
-            <button class="btn btn-kelas" onclick="pilihKelas('8B')">8B</button>
-            <button class="btn btn-kelas" onclick="pilihKelas('9A')">9A</button>
-            <button class="btn btn-kelas" onclick="pilihKelas('9B')">9B</button>
-          </div>
+      <!-- Area Daftar Siswa -->
+      <div id="areaSiswa" class="d-none">
+        <div class="section-title border-top pt-3">
+          <i class="fa-solid fa-users me-1"></i> Daftar Siswa Kelas <span id="labelKelas" class="text-primary"></span>:
         </div>
 
-        <!-- Tampilan 2: Pilih Nama Siswa -->
-        <div id="viewSiswa" class="d-none">
-          <div class="section-title">
-            <span><i class="fa-solid fa-user-check me-1"></i> Siswa Kelas <strong id="labelKelas"></strong>:</span>
-            <button class="btn-back" onclick="kembaliKeKelas()"><i class="fa-solid fa-arrow-left"></i> Ganti Kelas</button>
-          </div>
-          <div id="containerSiswa" class="list-siswa"></div>
+        <div id="loadingSiswa" class="text-center py-4 d-none">
+          <div class="spinner-border text-primary" role="status"></div>
+          <p class="mt-2 text-muted fw-semibold">Memuat daftar siswa...</p>
         </div>
 
-        <!-- Tampilan 3: Loading -->
-        <div id="viewLoading" class="text-center py-4 d-none">
-          <div class="spinner-border text-primary mb-2" role="status" style="width: 3rem; height: 3rem;"></div>
-          <h6 class="fw-bold text-slate-700" id="loadingText">Mencatat Kehadiran...</h6>
-        </div>
-
+        <div id="containerSiswa" class="list-siswa"></div>
       </div>
+
     </div>
   </div>
 
   <script>
-    const API_URL = 'https://script.google.com/macros/s/AKfycbzlJb9JYiz9Z4Kt89A14PCMY2quoBdQHbuIK8UNSL8iB77-3vQpeA4IvmAOYAllgNUH/exec';
+    // SALIN URL DEPLOYMENT APPS SCRIPT KAMU DI SINI
+    const API_URL = 'https://script.google.com/macros/s/AKfycbxtCvuQfI2GHo-vdY54EJLO1F33jV_LYgHhosRp_SVxsnENE-IjM_yJdg7Qz7zBuUhO/exec';
 
-    let kelasTerpilih = '';
+    let kelasAktif = '';
 
-    function pilihKelas(kelas) {
-      kelasTerpilih = kelas;
-      document.getElementById('labelKelas').innerText = kelas;
+    function pilihKelas(kelas, btn) {
+      kelasAktif = kelas;
+      document.getElementById('labelKelas').innerText = kelas.toUpperCase();
       
-      document.getElementById('viewKelas').classList.add('d-none');
-      document.getElementById('viewLoading').classList.remove('d-none');
-      document.getElementById('loadingText').innerText = 'Memuat siswa kelas ' + kelas + '...';
+      document.querySelectorAll('.btn-kelas').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
 
-      // Menggunakan GET request agar tidak terhadang CORS
-      const targetUrl = `${API_URL}?action=getSiswaByKelas&kelas=${encodeURIComponent(kelas)}`;
+      document.getElementById('areaSiswa').classList.remove('d-none');
+      document.getElementById('containerSiswa').innerHTML = '';
+      document.getElementById('loadingSiswa').classList.remove('d-none');
+
+      const targetUrl = `${API_URL}?action=getSiswaData&kelas=${encodeURIComponent(kelas)}`;
 
       fetch(targetUrl)
-      .then(res => res.json())
-      .then(res => {
-        document.getElementById('viewLoading').classList.add('d-none');
-        if(res.status === 'success' && res.data.length > 0) {
-          var container = document.getElementById('containerSiswa');
-          container.innerHTML = '';
-          
-          res.data.forEach(function(nama) {
-            var btn = document.createElement('button');
-            btn.className = 'btn btn-siswa';
-            btn.innerHTML = `<span>${nama}</span> <i class="fa-solid fa-chevron-right text-muted fs-6"></i>`;
-            btn.onclick = function() { submitAbsenDirect(nama); };
-            container.appendChild(btn);
-          });
+        .then(res => res.json())
+        .then(res => {
+          document.getElementById('loadingSiswa').classList.add('d-none');
+          if (res.status === 'success') {
+            tampilkanSiswa(res.data);
+          } else {
+            tampilkanAlert('danger', 'Gagal memuat data siswa.');
+          }
+        })
+        .catch(err => {
+          document.getElementById('loadingSiswa').classList.add('d-none');
+          tampilkanAlert('danger', 'Koneksi terputus. Periksa jaringan.');
+        });
+    }
 
-          document.getElementById('viewSiswa').classList.remove('d-none');
+    function tampilkanSiswa(data) {
+      var container = document.getElementById('containerSiswa');
+      container.innerHTML = '';
+
+      if (!data || data.length === 0) {
+        container.innerHTML = '<div class="text-center text-muted py-3">Tidak ada data siswa.</div>';
+        return;
+      }
+
+      data.forEach(function(item) {
+        var div = document.createElement('div');
+        div.className = 'item-siswa';
+
+        var namaSpan = document.createElement('span');
+        namaSpan.className = 'nama-siswa';
+        namaSpan.innerText = item.nama;
+
+        var btnAbsen = document.createElement('button');
+        
+        if (item.sudahAbsen) {
+          btnAbsen.className = 'btn btn-success btn-absen';
+          btnAbsen.innerHTML = '<i class="fa-solid fa-check me-1"></i> Sudah Absen';
+          btnAbsen.disabled = true;
         } else {
-          tampilkanAlert('danger', 'Data siswa kelas ' + kelas + ' tidak ditemukan di Sheet.');
-          kembaliKeKelas();
+          btnAbsen.className = 'btn btn-primary btn-absen';
+          btnAbsen.innerHTML = 'Absen';
+          btnAbsen.onclick = function() { lakukanAbsen(item.nama, btnAbsen); };
         }
-      })
-      .catch(err => {
-        document.getElementById('viewLoading').classList.add('d-none');
-        tampilkanAlert('danger', 'Gagal memuat data. Periksa jaringan.');
-        kembaliKeKelas();
+
+        div.appendChild(namaSpan);
+        div.appendChild(btnAbsen);
+        container.appendChild(div);
       });
     }
 
-    function submitAbsenDirect(nama) {
-      document.getElementById('viewSiswa').classList.add('d-none');
-      document.getElementById('viewLoading').classList.remove('d-none');
-      document.getElementById('loadingText').innerText = 'Mengirim absensi ' + nama + '...';
+    function lakukanAbsen(nama, btnElement) {
+      btnElement.disabled = true;
+      btnElement.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Mengirim...';
 
-      const targetUrl = `${API_URL}?action=simpanAbsen&nama=${encodeURIComponent(nama)}&kelas=${encodeURIComponent(kelasTerpilih)}`;
+      const targetUrl = `${API_URL}?action=simpanAbsen&nama=${encodeURIComponent(nama)}&kelas=${encodeURIComponent(kelasAktif)}`;
 
       fetch(targetUrl)
-      .then(res => res.json())
-      .then(res => {
-        document.getElementById('viewLoading').classList.add('d-none');
-        if(res.status === 'success') {
-          tampilkanAlert('success', '✓ ' + nama + ' (' + kelasTerpilih + ') Berhasil Absen & WA Terkirim!');
-        } else {
-          tampilkanAlert('danger', 'Gagal menyimpan absensi.');
-        }
-        kembaliKeKelas();
-      })
-      .catch(err => {
-        document.getElementById('viewLoading').classList.add('d-none');
-        tampilkanAlert('danger', 'Gagal terhubung ke server.');
-        kembaliKeKelas();
-      });
-    }
-
-    function kembaliKeKelas() {
-      document.getElementById('viewSiswa').classList.add('d-none');
-      document.getElementById('viewLoading').classList.add('d-none');
-      document.getElementById('viewKelas').classList.remove('d-none');
+        .then(res => res.json())
+        .then(res => {
+          if (res.status === 'success') {
+            btnElement.className = 'btn btn-success btn-absen';
+            btnElement.innerHTML = '<i class="fa-solid fa-check me-1"></i> Sudah Absen';
+            tampilkanAlert('success', '✓ Absen ' + nama + ' berhasil & WA terkirim!');
+          } else {
+            btnElement.disabled = false;
+            btnElement.innerHTML = 'Absen';
+            tampilkanAlert('danger', 'Gagal memproses absensi.');
+          }
+        })
+        .catch(err => {
+          btnElement.disabled = false;
+          btnElement.innerHTML = 'Absen';
+          tampilkanAlert('danger', 'Koneksi terputus.');
+        });
     }
 
     function tampilkanAlert(tipe, pesan) {
