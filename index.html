@@ -1,7 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-  <base target="_top">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Presensi Online Sholat Dhuhur</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
     body { background-color: #f4f6f9; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
@@ -48,7 +50,7 @@
   </div>
 
   <script>
-    // MASUKKAN URL DEPLOYMENT GOOGLE APPS SCRIPT KAMU DI SINI:
+    // URL Deployment Apps Script kamu
     var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxtCvuQfI2GHo-vdY54EJLO1F33jV_LYgHhosRp_SVxsnENE-IjM_yJdg7Qz7zBuUhO/exec";
     var currentKelas = "";
 
@@ -70,19 +72,22 @@
       document.getElementById('listSiswa').innerHTML = "";
       document.getElementById('loading').style.display = "block";
 
-      fetch(SCRIPT_URL + '?action=getSiswaData&kelas=' + encodeURIComponent(kelas))
+      fetch(SCRIPT_URL + '?action=getSiswaData&kelas=' + encodeURIComponent(kelas), {
+        method: 'GET',
+        redirect: 'follow'
+      })
         .then(res => res.json())
         .then(res => {
           document.getElementById('loading').style.display = "none";
           if (res.status === 'success') {
             renderSiswa(res.data);
           } else {
-            alert('Gagal mengambil data siswa');
+            alert('Gagal mengambil data siswa: ' + (res.message || ''));
           }
         })
         .catch(err => {
           document.getElementById('loading').style.display = "none";
-          alert('Gagal terhubung ke server');
+          alert('Gagal terhubung ke server: ' + err.message);
         });
     }
 
@@ -121,12 +126,12 @@
           btnContainer.appendChild(btnAbsen);
         }
 
-        // 2. Tombol Sanksi
+        // 2. Tombol Sanksi (Otomatis menampilkan Teks Rumus dari Spreadsheet)
         if (s.statusSanksi && s.statusSanksi.trim().toLowerCase() !== "aman") {
           var btnSanksi = document.createElement('button');
           btnSanksi.className = "btn btn-danger btn-action";
           btnSanksi.innerText = "Sanksi: " + s.statusSanksi;
-          btnSanksi.onclick = function() { selesaikanSanksi(s.nama, s.statusSanksi, btnSanksi); };
+          btnSanksi.onclick = function() { kirimWA(s.nama, s.statusSanksi); };
           btnContainer.appendChild(btnSanksi);
         }
 
@@ -140,7 +145,10 @@
       btn.disabled = true;
       btn.innerText = "Proses...";
 
-      fetch(SCRIPT_URL + '?action=simpanAbsen&nama=' + encodeURIComponent(nama) + '&kelas=' + encodeURIComponent(currentKelas))
+      fetch(SCRIPT_URL + '?action=simpanAbsen&nama=' + encodeURIComponent(nama) + '&kelas=' + encodeURIComponent(currentKelas), {
+        method: 'GET',
+        redirect: 'follow'
+      })
         .then(res => res.json())
         .then(res => {
           btn.className = "btn btn-success btn-action";
@@ -153,23 +161,11 @@
         });
     }
 
-    function selesaikanSanksi(nama, sanksiText, btn) {
-      if (confirm('Konfirmasi Penyelesaian Sanksi:\n\nSiswa: ' + nama + '\nStatus: ' + sanksiText + '\n\nApakah siswa ini SUDAH MELAKSANAKAN sanksi hari ini?')) {
-        btn.disabled = true;
-        btn.innerText = "Proses...";
-
-        fetch(SCRIPT_URL + '?action=selaikanSanksi&nama=' + encodeURIComponent(nama) + '&kelas=' + encodeURIComponent(currentKelas))
-          .then(res => res.json())
-          .then(res => {
-            alert('Sanksi tuntas!');
-            btn.remove();
-          })
-          .catch(err => {
-            btn.disabled = false;
-            btn.innerText = "Sanksi: " + sanksiText;
-            alert('Gagal memproses sanksi');
-          });
-      }
+    function kirimWA(nama, sanksiText) {
+      var pesan = "Assalamu'alaikum Wr. Wb.\n\nInformasi UPT SMP Negeri 3 Sutojayan menginfokan bahwa siswa atas nama *" + nama + "* (Kelas " + currentKelas.toUpperCase() + ") memiliki sanksi presensi sholat dhuhur berupa: *" + sanksiText + "*.\n\nMohon bimbingan dan perhatiannya dari Bapak/Ibu Orang Tua/Wali. Terima kasih.";
+      
+      var urlWa = "https://wa.me/?text=" + encodeURIComponent(pesan);
+      window.open(urlWa, '_blank');
     }
   </script>
 </body>
