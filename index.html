@@ -135,7 +135,7 @@
       // 2. Tombol Sanksi (HANYA MUNCUL JIKA ADA SANKSI AKTIF / TIDAK AMAN)
       var btnSanksi = '';
       if (siswa.statusSanksi !== 'Aman' && siswa.statusSanksi !== '') {
-        btnSanksi = '<button class="btn btn-danger btn-sm fw-bold" onclick="prosesSanksi(\'' + siswa.nama + '\', \'' + siswa.statusSanksi + '\')">Sanksi: ' + siswa.statusSanksi + '</button>';
+        btnSanksi = '<button class="btn btn-danger btn-sm fw-bold" onclick="prosesSanksi(\'' + siswa.nama + '\', \'' + siswa.statusSanksi + '\', this)">Sanksi: ' + siswa.statusSanksi + '</button>';
       }
 
       row.innerHTML = nameElem + '<div class="d-flex align-items-center">' + btnAbsen + btnSanksi + '</div>';
@@ -143,28 +143,53 @@
     });
   }
 
+  // Bekerja Secara Lokal Cepat Tanpa Full Reload
   function lakukanAbsen(nama, btn) {
+    var originalText = btn.innerHTML;
     btn.disabled = true;
-    btn.textContent = 'Proses...';
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>Simpan...';
 
     fetch(SCRIPT_URL + '?action=simpanAbsen&nama=' + encodeURIComponent(nama) + '&kelas=' + encodeURIComponent(selectedKelas))
       .then(res => res.json())
       .then(data => {
         if (data.status === 'success') {
-          loadSiswa(selectedKelas);
+          // Langsung ubah tampilan tombol secara instan
+          btn.className = 'btn btn-success btn-sm px-3 me-2';
+          btn.innerHTML = 'Sudah Absen';
+          btn.disabled = true;
+        } else {
+          alert('Gagal menyimpan presensi. Silakan coba lagi.');
+          btn.disabled = false;
+          btn.innerHTML = originalText;
         }
+      })
+      .catch(err => {
+        alert('Kesalahan jaringan. Periksa koneksi Anda.');
+        btn.disabled = false;
+        btn.innerHTML = originalText;
       });
   }
 
-  function prosesSanksi(nama, statusSanksi) {
+  // Selesaikan Sanksi Cepat Tanpa Full Reload
+  function prosesSanksi(nama, statusSanksi, btn) {
     var konfirmasi = confirm('Konfirmasi Penyelesaian Sanksi:\n\nSiswa: ' + nama + '\nStatus: ' + statusSanksi + '\n\nApakah siswa ini SUDAH MELAKSANAKAN sanksi tersebut hari ini?');
     
     if (konfirmasi) {
+      var originalText = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>Proses...';
+
       fetch(SCRIPT_URL + '?action=selaikanSanksi&nama=' + encodeURIComponent(nama) + '&kelas=' + encodeURIComponent(selectedKelas))
         .then(res => res.json())
         .then(data => {
           alert('Sanksi untuk ' + nama + ' telah ditandai LUNAS/TUNTAS.');
-          loadSiswa(selectedKelas); // Refresh tampilan agar tombol sanksi otomatis HILANG
+          // Hapus tombol sanksi secara instan
+          btn.remove();
+        })
+        .catch(err => {
+          alert('Gagal memproses sanksi.');
+          btn.disabled = false;
+          btn.innerHTML = originalText;
         });
     }
   }
