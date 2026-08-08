@@ -1,199 +1,176 @@
 <!DOCTYPE html>
-<html lang="id">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Presensi Online Sholat Dhuhur</title>
+  <base target="_top">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
-    body {
-      background-color: #f4f6f9;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-    .main-card {
-      max-width: 500px;
-      margin: 20px auto;
-      border-radius: 15px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-      overflow: hidden;
-      background: #fff;
-    }
-    .header-bg {
-      background: linear-gradient(135deg, #2563eb, #1d4ed8);
-      color: white;
-      padding: 25px 20px;
-      text-align: center;
-    }
-    .btn-kelas {
-      min-width: 75px;
-      font-weight: 600;
-      border-radius: 8px;
-    }
-    .siswa-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 12px 15px;
-      border-bottom: 1px solid #eef2f7;
-    }
-    .siswa-row:last-child {
-      border-bottom: none;
-    }
-    .siswa-name {
-      font-weight: 500;
-      color: #334155;
-    }
+    body { background-color: #f4f6f9; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    .header-box { background: linear-gradient(135deg, #1e5799 0%,#2989d8 50%,#207cca 100%); color: white; padding: 25px 15px; border-radius: 0 0 15px 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.15); }
+    .card-custom { border-radius: 12px; border: none; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+    .btn-kelas { font-weight: 600; min-width: 60px; margin: 3px; border-radius: 8px; }
+    .list-group-item { border-radius: 8px !important; margin-bottom: 6px; border: 1px solid #e9ecef; }
+    .btn-action { min-width: 110px; font-weight: 600; border-radius: 6px; }
   </style>
 </head>
 <body>
 
-<div class="container">
-  <div class="main-card">
-    <div class="header-bg">
-      <h5 class="mb-1 text-uppercase fw-bold">Presensi Online Sholat Dhuhur</h5>
-      <small>UPT SMP NEGERI 3 SUTOJAYAN</small>
+  <div class="header-box text-center mb-4">
+    <h4 class="fw-bold mb-1">PRESENSI ONLINE SHOLAT DHUHUR</h4>
+    <p class="mb-0 small">UPT SMP NEGERI 3 SUTOJAYAN</p>
+  </div>
+
+  <div class="container" style="max-width: 600px;">
+    <!-- PILIH KELAS -->
+    <div class="card card-custom p-3 mb-4">
+      <label class="form-label fw-bold text-secondary mb-2"><small>PILIH KELAS:</small></label>
+      <div class="d-flex flex-wrap justify-content-center" id="containerKelas">
+        <button class="btn btn-outline-primary btn-kelas" onclick="loadSiswa('7a')">7a</button>
+        <button class="btn btn-outline-primary btn-kelas" onclick="loadSiswa('8a')">8a</button>
+        <button class="btn btn-outline-primary btn-kelas" onclick="loadSiswa('8b')">8b</button>
+        <button class="btn btn-outline-primary btn-kelas" onclick="loadSiswa('9a')">9a</button>
+        <button class="btn btn-outline-primary btn-kelas" onclick="loadSiswa('9b')">9b</button>
+      </div>
     </div>
 
-    <div class="p-3">
-      <label class="form-label fw-bold text-secondary small">PILIH KELAS:</label>
-      <div class="d-flex flex-wrap gap-2 mb-3" id="container-kelas">
-        <button class="btn btn-outline-primary btn-kelas" onclick="pilihKelas('7a', this)">7a</button>
-        <button class="btn btn-outline-primary btn-kelas" onclick="pilihKelas('8a', this)">8a</button>
-        <button class="btn btn-outline-primary btn-kelas" onclick="pilihKelas('8b', this)">8b</button>
-        <button class="btn btn-outline-primary btn-kelas" onclick="pilihKelas('9a', this)">9a</button>
-        <button class="btn btn-outline-primary btn-kelas" onclick="pilihKelas('9b', this)">9b</button>
+    <!-- DAFTAR SISWA -->
+    <div class="card card-custom p-3 mb-5">
+      <h6 class="fw-bold text-dark mb-3" id="titleDaftar">Daftar Siswa:</h6>
+      
+      <div id="loading" class="text-center py-4" style="display: none;">
+        <div class="spinner-border text-primary" role="status"></div>
+        <div class="small text-muted mt-2">Memuat data siswa...</div>
       </div>
 
-      <div class="d-flex justify-content-between align-items-center mb-2">
-        <span class="fw-bold text-dark small" id="title-daftar">Daftar Siswa:</span>
-      </div>
-
-      <div id="list-siswa" class="border rounded bg-white">
-        <div class="text-center p-4 text-muted small">Silakan pilih kelas terlebih dahulu</div>
-      </div>
+      <ul class="list-group list-group-flush" id="listSiswa">
+        <li class="list-group-item text-center text-muted py-4">Silakan pilih kelas terlebih dahulu.</li>
+      </ul>
     </div>
   </div>
-</div>
 
-<script>
-  // Ganti URL ini dengan Web App URL Apps Script milikmu
-  var SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxtCvuQfI2GHo-vdY54EJLO1F33jV_LYgHhosRp_SVxsnENE-IjM_yJdg7Qz7zBuUhO/exec';
-  var selectedKelas = '';
+  <script>
+    // MASUKKAN URL DEPLOYMENT GOOGLE APPS SCRIPT KAMU DI SINI:
+    var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxtCvuQfI2GHo-vdY54EJLO1F33jV_LYgHhosRp_SVxsnENE-IjM_yJdg7Qz7zBuUhO/exec";
+    var currentKelas = "";
 
-  function pilihKelas(kelas, btn) {
-    selectedKelas = kelas;
-    
-    var buttons = document.querySelectorAll('.btn-kelas');
-    buttons.forEach(b => b.classList.replace('btn-primary', 'btn-outline-primary'));
-    btn.classList.replace('btn-outline-primary', 'btn-primary');
-
-    document.getElementById('title-daftar').innerText = 'Daftar Siswa Kelas ' + kelas.toUpperCase() + ':';
-    loadSiswa(kelas);
-  }
-
-  function loadSiswa(kelas) {
-    var container = document.getElementById('list-siswa');
-    container.innerHTML = '<div class="text-center p-3 text-secondary small">Memuat data siswa...</div>';
-
-    fetch(SCRIPT_URL + '?action=getSiswaData&kelas=' + encodeURIComponent(kelas))
-      .then(res => res.json())
-      .then(res => {
-        if (res.status === 'success') {
-          renderSiswa(res.data);
-        } else {
-          container.innerHTML = '<div class="text-center p-3 text-danger small">Gagal memuat data</div>';
-        }
-      })
-      .catch(err => {
-        container.innerHTML = '<div class="text-center p-3 text-danger small">Kesalahan jaringan</div>';
-      });
-  }
-
-  function renderSiswa(data) {
-    var container = document.getElementById('list-siswa');
-    container.innerHTML = '';
-
-    if (data.length === 0) {
-      container.innerHTML = '<div class="text-center p-3 text-muted small">Tidak ada data siswa</div>';
-      return;
-    }
-
-    data.forEach(function(siswa) {
-      var row = document.createElement('div');
-      row.className = 'siswa-row';
-
-      var nameElem = '<div class="siswa-name">' + siswa.nama + '</div>';
+    function loadSiswa(kelas) {
+      currentKelas = kelas;
       
-      // 1. Tombol Presensi
-      var btnAbsen = '';
-      if (siswa.sudahAbsen) {
-        btnAbsen = '<button class="btn btn-success btn-sm px-3 me-2" disabled>Sudah Absen</button>';
-      } else {
-        btnAbsen = '<button class="btn btn-primary btn-sm px-3 me-2" onclick="lakukanAbsen(\'' + siswa.nama + '\', this)">Absen</button>';
-      }
-
-      // 2. Tombol Sanksi (HANYA MUNCUL JIKA ADA SANKSI AKTIF / TIDAK AMAN)
-      var btnSanksi = '';
-      if (siswa.statusSanksi !== 'Aman' && siswa.statusSanksi !== '') {
-        btnSanksi = '<button class="btn btn-danger btn-sm fw-bold" onclick="prosesSanksi(\'' + siswa.nama + '\', \'' + siswa.statusSanksi + '\', this)">Sanksi: ' + siswa.statusSanksi + '</button>';
-      }
-
-      row.innerHTML = nameElem + '<div class="d-flex align-items-center">' + btnAbsen + btnSanksi + '</div>';
-      container.appendChild(row);
-    });
-  }
-
-  // Bekerja Secara Lokal Cepat Tanpa Full Reload
-  function lakukanAbsen(nama, btn) {
-    var originalText = btn.innerHTML;
-    btn.disabled = true;
-    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>Simpan...';
-
-    fetch(SCRIPT_URL + '?action=simpanAbsen&nama=' + encodeURIComponent(nama) + '&kelas=' + encodeURIComponent(selectedKelas))
-      .then(res => res.json())
-      .then(data => {
-        if (data.status === 'success') {
-          // Langsung ubah tampilan tombol secara instan
-          btn.className = 'btn btn-success btn-sm px-3 me-2';
-          btn.innerHTML = 'Sudah Absen';
-          btn.disabled = true;
+      var buttons = document.querySelectorAll('.btn-kelas');
+      buttons.forEach(btn => {
+        if(btn.innerText.toLowerCase() === kelas.toLowerCase()) {
+          btn.classList.remove('btn-outline-primary');
+          btn.classList.add('btn-primary');
         } else {
-          alert('Gagal menyimpan presensi. Silakan coba lagi.');
-          btn.disabled = false;
-          btn.innerHTML = originalText;
+          btn.classList.remove('btn-primary');
+          btn.classList.add('btn-outline-primary');
         }
-      })
-      .catch(err => {
-        alert('Kesalahan jaringan. Periksa koneksi Anda.');
-        btn.disabled = false;
-        btn.innerHTML = originalText;
       });
-  }
 
-  // Selesaikan Sanksi Cepat Tanpa Full Reload
-  function prosesSanksi(nama, statusSanksi, btn) {
-    var konfirmasi = confirm('Konfirmasi Penyelesaian Sanksi:\n\nSiswa: ' + nama + '\nStatus: ' + statusSanksi + '\n\nApakah siswa ini SUDAH MELAKSANAKAN sanksi tersebut hari ini?');
-    
-    if (konfirmasi) {
-      var originalText = btn.innerHTML;
-      btn.disabled = true;
-      btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>Proses...';
+      document.getElementById('titleDaftar').innerText = "Daftar Siswa Kelas " + kelas.toUpperCase() + ":";
+      document.getElementById('listSiswa').innerHTML = "";
+      document.getElementById('loading').style.display = "block";
 
-      fetch(SCRIPT_URL + '?action=selaikanSanksi&nama=' + encodeURIComponent(nama) + '&kelas=' + encodeURIComponent(selectedKelas))
+      fetch(SCRIPT_URL + '?action=getSiswaData&kelas=' + encodeURIComponent(kelas))
         .then(res => res.json())
-        .then(data => {
-          alert('Sanksi untuk ' + nama + ' telah ditandai LUNAS/TUNTAS.');
-          // Hapus tombol sanksi secara instan
-          btn.remove();
+        .then(res => {
+          document.getElementById('loading').style.display = "none";
+          if (res.status === 'success') {
+            renderSiswa(res.data);
+          } else {
+            alert('Gagal mengambil data siswa');
+          }
         })
         .catch(err => {
-          alert('Gagal memproses sanksi.');
-          btn.disabled = false;
-          btn.innerHTML = originalText;
+          document.getElementById('loading').style.display = "none";
+          alert('Gagal terhubung ke server');
         });
     }
-  }
-</script>
 
+    function renderSiswa(data) {
+      var listEl = document.getElementById('listSiswa');
+      listEl.innerHTML = "";
+
+      if (!data || data.length === 0) {
+        listEl.innerHTML = '<li class="list-group-item text-center text-muted">Tidak ada data siswa.</li>';
+        return;
+      }
+
+      data.forEach(function(s) {
+        var li = document.createElement('li');
+        li.className = "list-group-item d-flex justify-content-between align-items-center py-3";
+
+        var namaSpan = document.createElement('span');
+        namaSpan.className = "fw-semibold text-dark";
+        namaSpan.innerText = s.nama;
+
+        var btnContainer = document.createElement('div');
+        btnContainer.className = "d-flex gap-2";
+
+        // 1. Tombol Absen
+        if (s.sudahAbsen) {
+          var btnSudah = document.createElement('button');
+          btnSudah.className = "btn btn-success btn-action";
+          btnSudah.disabled = true;
+          btnSudah.innerText = "Sudah Absen";
+          btnContainer.appendChild(btnSudah);
+        } else {
+          var btnAbsen = document.createElement('button');
+          btnAbsen.className = "btn btn-outline-success btn-action";
+          btnAbsen.innerText = "Absen";
+          btnAbsen.onclick = function() { doAbsen(s.nama, btnAbsen); };
+          btnContainer.appendChild(btnAbsen);
+        }
+
+        // 2. Tombol Sanksi
+        if (s.statusSanksi && s.statusSanksi.trim().toLowerCase() !== "aman") {
+          var btnSanksi = document.createElement('button');
+          btnSanksi.className = "btn btn-danger btn-action";
+          btnSanksi.innerText = "Sanksi: " + s.statusSanksi;
+          btnSanksi.onclick = function() { selesaikanSanksi(s.nama, s.statusSanksi, btnSanksi); };
+          btnContainer.appendChild(btnSanksi);
+        }
+
+        li.appendChild(namaSpan);
+        li.appendChild(btnContainer);
+        listEl.appendChild(li);
+      });
+    }
+
+    function doAbsen(nama, btn) {
+      btn.disabled = true;
+      btn.innerText = "Proses...";
+
+      fetch(SCRIPT_URL + '?action=simpanAbsen&nama=' + encodeURIComponent(nama) + '&kelas=' + encodeURIComponent(currentKelas))
+        .then(res => res.json())
+        .then(res => {
+          btn.className = "btn btn-success btn-action";
+          btn.innerText = "Sudah Absen";
+        })
+        .catch(err => {
+          btn.disabled = false;
+          btn.innerText = "Absen";
+          alert("Gagal menyimpan absen");
+        });
+    }
+
+    function selesaikanSanksi(nama, sanksiText, btn) {
+      if (confirm('Konfirmasi Penyelesaian Sanksi:\n\nSiswa: ' + nama + '\nStatus: ' + sanksiText + '\n\nApakah siswa ini SUDAH MELAKSANAKAN sanksi hari ini?')) {
+        btn.disabled = true;
+        btn.innerText = "Proses...";
+
+        fetch(SCRIPT_URL + '?action=selaikanSanksi&nama=' + encodeURIComponent(nama) + '&kelas=' + encodeURIComponent(currentKelas))
+          .then(res => res.json())
+          .then(res => {
+            alert('Sanksi tuntas!');
+            btn.remove();
+          })
+          .catch(err => {
+            btn.disabled = false;
+            btn.innerText = "Sanksi: " + sanksiText;
+            alert('Gagal memproses sanksi');
+          });
+      }
+    }
+  </script>
 </body>
 </html>
