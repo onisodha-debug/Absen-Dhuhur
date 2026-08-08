@@ -3,300 +3,172 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Presensi Online Sholat Dhuhur - UPT SMPN 3 Sutojayan</title>
+  <title>Presensi Online Sholat Dhuhur</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdnjs.cloudflare.net/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <style>
-    :root {
-      --primary-color: #4f46e5;
-      --bg-color: #f8fafc;
-      --card-bg: #ffffff;
-      --text-main: #1e293b;
-    }
-
     body {
-      background-color: var(--bg-color);
-      color: var(--text-main);
+      background-color: #f4f6f9;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      min-height: 100vh;
-      display: flex;
-      align-items: flex-start;
-      justify-content: center;
-      padding: 20px 10px;
     }
-
     .main-card {
-      background: var(--card-bg);
-      border: none;
-      border-radius: 20px;
-      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08);
-      overflow: hidden;
       max-width: 500px;
-      width: 100%;
+      margin: 20px auto;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      overflow: hidden;
+      background: #fff;
     }
-
-    .card-header-custom {
-      background: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%);
+    .header-bg {
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
       color: white;
-      padding: 24px 20px;
+      padding: 25px 20px;
       text-align: center;
     }
-
-    .card-header-custom i {
-      font-size: 2.2rem;
-      margin-bottom: 8px;
-    }
-
-    .card-header-custom h4 {
-      font-weight: 800;
-      margin-bottom: 4px;
-      font-size: 1.2rem;
-    }
-
-    .card-header-custom h5 {
-      font-weight: 600;
-      font-size: 0.95rem;
-      opacity: 0.95;
-      margin-bottom: 2px;
-    }
-
-    .card-header-custom p {
-      font-size: 0.8rem;
-      opacity: 0.85;
-      margin: 0;
-    }
-
-    .card-body-custom {
-      padding: 20px;
-    }
-
-    .section-title {
-      font-weight: 700;
-      font-size: 0.95rem;
-      color: #475569;
-      margin-bottom: 12px;
-    }
-
-    .grid-kelas {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      margin-bottom: 20px;
-    }
-
     .btn-kelas {
-      background-color: #f1f5f9;
-      color: #1e293b;
-      border: 2px solid #e2e8f0;
-      border-radius: 12px;
-      padding: 12px 8px;
-      font-weight: 700;
-      font-size: 1rem;
-      transition: all 0.2s ease;
-      cursor: pointer;
-    }
-
-    .btn-kelas.active {
-      background-color: var(--primary-color);
-      color: white;
-      border-color: var(--primary-color);
-    }
-
-    .list-siswa {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      max-height: 380px;
-      overflow-y: auto;
-      padding-right: 4px;
-    }
-
-    .item-siswa {
-      background-color: #ffffff;
-      border: 1px solid #e2e8f0;
-      border-radius: 12px;
-      padding: 12px 16px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .nama-siswa {
+      min-width: 75px;
       font-weight: 600;
-      font-size: 0.95rem;
-      color: #334155;
-    }
-
-    .btn-absen {
       border-radius: 8px;
-      font-weight: 700;
-      font-size: 0.85rem;
-      padding: 6px 14px;
-      transition: all 0.2s ease;
     }
-
-    .alert-custom {
-      border-radius: 12px;
-      font-size: 0.9rem;
-      font-weight: 600;
-      text-align: center;
-      display: none;
+    .siswa-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 15px;
+      border-bottom: 1px solid #eef2f7;
+    }
+    .siswa-row:last-child {
+      border-bottom: none;
+    }
+    .siswa-name {
+      font-weight: 500;
+      color: #334155;
     }
   </style>
 </head>
 <body>
 
+<div class="container">
   <div class="main-card">
-    
-    <!-- Header -->
-    <div class="card-header-custom">
-      <i class="fa-solid fa-mosque"></i>
-      <h4>PRESENSI ONLINE SHOLAT DHUHUR</h4>
-      <h5>UPT SMP NEGERI 3 SUTOJAYAN</h5>
-      <p>Sistem Cepat & Otomatis</p>
+    <div class="header-bg">
+      <h5 class="mb-1 text-uppercase fw-bold">Presensi Online Sholat Dhuhur</h5>
+      <small>UPT SMP NEGERI 3 SUTOJAYAN</small>
     </div>
 
-    <!-- Body -->
-    <div class="card-body-custom">
-      
-      <!-- Alert Box -->
-      <div id="alertBox" class="alert alert-custom mb-3" role="alert"></div>
-
-      <!-- Pilih Kelas -->
-      <div class="section-title">
-        <i class="fa-solid fa-school me-1"></i> Pilih Kelas:
-      </div>
-      <div class="grid-kelas">
-        <button class="btn btn-kelas" onclick="pilihKelas('7a', this)">7a</button>
-        <button class="btn btn-kelas" onclick="pilihKelas('8a', this)">8a</button>
-        <button class="btn btn-kelas" onclick="pilihKelas('8b', this)">8b</button>
-        <button class="btn btn-kelas" onclick="pilihKelas('9a', this)">9a</button>
-        <button class="btn btn-kelas" onclick="pilihKelas('9b', this)">9b</button>
+    <div class="p-3">
+      <label class="form-label fw-bold text-secondary small">PILIH KELAS:</label>
+      <div class="d-flex flex-wrap gap-2 mb-3" id="container-kelas">
+        <button class="btn btn-outline-primary btn-kelas" onclick="pilihKelas('7a', this)">7a</button>
+        <button class="btn btn-outline-primary btn-kelas" onclick="pilihKelas('8a', this)">8a</button>
+        <button class="btn btn-outline-primary btn-kelas" onclick="pilihKelas('8b', this)">8b</button>
+        <button class="btn btn-outline-primary btn-kelas" onclick="pilihKelas('9a', this)">9a</button>
+        <button class="btn btn-outline-primary btn-kelas" onclick="pilihKelas('9b', this)">9b</button>
       </div>
 
-      <!-- Area Daftar Siswa -->
-      <div id="areaSiswa" class="d-none">
-        <div class="section-title border-top pt-3">
-          <i class="fa-solid fa-users me-1"></i> Daftar Siswa Kelas <span id="labelKelas" class="text-primary"></span>:
-        </div>
-
-        <div id="loadingSiswa" class="text-center py-4 d-none">
-          <div class="spinner-border text-primary" role="status"></div>
-          <p class="mt-2 text-muted fw-semibold">Memuat daftar siswa...</p>
-        </div>
-
-        <div id="containerSiswa" class="list-siswa"></div>
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <span class="fw-bold text-dark small" id="title-daftar">Daftar Siswa:</span>
       </div>
 
+      <div id="list-siswa" class="border rounded bg-white">
+        <div class="text-center p-4 text-muted small">Silakan pilih kelas terlebih dahulu</div>
+      </div>
     </div>
   </div>
+</div>
 
-  <script>
-    // SALIN URL DEPLOYMENT APPS SCRIPT KAMU DI SINI
-    const API_URL = 'https://script.google.com/macros/s/AKfycbxtCvuQfI2GHo-vdY54EJLO1F33jV_LYgHhosRp_SVxsnENE-IjM_yJdg7Qz7zBuUhO/exec';
+<script>
+  // Ganti URL ini dengan Web App URL Apps Script milikmu
+  var SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxtCvuQfI2GHo-vdY54EJLO1F33jV_LYgHhosRp_SVxsnENE-IjM_yJdg7Qz7zBuUhO/exec';
+  var selectedKelas = '';
 
-    let kelasAktif = '';
+  function pilihKelas(kelas, btn) {
+    selectedKelas = kelas;
+    
+    var buttons = document.querySelectorAll('.btn-kelas');
+    buttons.forEach(b => b.classList.replace('btn-primary', 'btn-outline-primary'));
+    btn.classList.replace('btn-outline-primary', 'btn-primary');
 
-    function pilihKelas(kelas, btn) {
-      kelasAktif = kelas;
-      document.getElementById('labelKelas').innerText = kelas.toUpperCase();
-      
-      document.querySelectorAll('.btn-kelas').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
+    document.getElementById('title-daftar').innerText = 'Daftar Siswa Kelas ' + kelas.toUpperCase() + ':';
+    loadSiswa(kelas);
+  }
 
-      document.getElementById('areaSiswa').classList.remove('d-none');
-      document.getElementById('containerSiswa').innerHTML = '';
-      document.getElementById('loadingSiswa').classList.remove('d-none');
+  function loadSiswa(kelas) {
+    var container = document.getElementById('list-siswa');
+    container.innerHTML = '<div class="text-center p-3 text-secondary small">Memuat data siswa...</div>';
 
-      const targetUrl = `${API_URL}?action=getSiswaData&kelas=${encodeURIComponent(kelas)}`;
+    fetch(SCRIPT_URL + '?action=getSiswaData&kelas=' + encodeURIComponent(kelas))
+      .then(res => res.json())
+      .then(res => {
+        if (res.status === 'success') {
+          renderSiswa(res.data);
+        } else {
+          container.innerHTML = '<div class="text-center p-3 text-danger small">Gagal memuat data</div>';
+        }
+      })
+      .catch(err => {
+        container.innerHTML = '<div class="text-center p-3 text-danger small">Kesalahan jaringan</div>';
+      });
+  }
 
-      fetch(targetUrl)
-        .then(res => res.json())
-        .then(res => {
-          document.getElementById('loadingSiswa').classList.add('d-none');
-          if (res.status === 'success') {
-            tampilkanSiswa(res.data);
-          } else {
-            tampilkanAlert('danger', 'Gagal memuat data siswa.');
-          }
-        })
-        .catch(err => {
-          document.getElementById('loadingSiswa').classList.add('d-none');
-          tampilkanAlert('danger', 'Koneksi terputus. Periksa jaringan.');
-        });
+  function renderSiswa(data) {
+    var container = document.getElementById('list-siswa');
+    container.innerHTML = '';
+
+    if (data.length === 0) {
+      container.innerHTML = '<div class="text-center p-3 text-muted small">Tidak ada data siswa</div>';
+      return;
     }
 
-    function tampilkanSiswa(data) {
-      var container = document.getElementById('containerSiswa');
-      container.innerHTML = '';
+    data.forEach(function(siswa) {
+      var row = document.createElement('div');
+      row.className = 'siswa-row';
 
-      if (!data || data.length === 0) {
-        container.innerHTML = '<div class="text-center text-muted py-3">Tidak ada data siswa.</div>';
-        return;
+      var nameElem = '<div class="siswa-name">' + siswa.nama + '</div>';
+      
+      // 1. Tombol Presensi
+      var btnAbsen = '';
+      if (siswa.sudahAbsen) {
+        btnAbsen = '<button class="btn btn-success btn-sm px-3 me-2" disabled>Sudah Absen</button>';
+      } else {
+        btnAbsen = '<button class="btn btn-primary btn-sm px-3 me-2" onclick="lakukanAbsen(\'' + siswa.nama + '\', this)">Absen</button>';
       }
 
-      data.forEach(function(item) {
-        var div = document.createElement('div');
-        div.className = 'item-siswa';
+      // 2. Tombol Sanksi (HANYA MUNCUL JIKA ADA SANKSI AKTIF / TIDAK AMAN)
+      var btnSanksi = '';
+      if (siswa.statusSanksi !== 'Aman' && siswa.statusSanksi !== '') {
+        btnSanksi = '<button class="btn btn-danger btn-sm fw-bold" onclick="prosesSanksi(\'' + siswa.nama + '\', \'' + siswa.statusSanksi + '\')">Sanksi: ' + siswa.statusSanksi + '</button>';
+      }
 
-        var namaSpan = document.createElement('span');
-        namaSpan.className = 'nama-siswa';
-        namaSpan.innerText = item.nama;
+      row.innerHTML = nameElem + '<div class="d-flex align-items-center">' + btnAbsen + btnSanksi + '</div>';
+      container.appendChild(row);
+    });
+  }
 
-        var btnAbsen = document.createElement('button');
-        
-        if (item.sudahAbsen) {
-          btnAbsen.className = 'btn btn-success btn-absen';
-          btnAbsen.innerHTML = '<i class="fa-solid fa-check me-1"></i> Sudah Absen';
-          btnAbsen.disabled = true;
-        } else {
-          btnAbsen.className = 'btn btn-primary btn-absen';
-          btnAbsen.innerHTML = 'Absen';
-          btnAbsen.onclick = function() { lakukanAbsen(item.nama, btnAbsen); };
+  function lakukanAbsen(nama, btn) {
+    btn.disabled = true;
+    btn.textContent = 'Proses...';
+
+    fetch(SCRIPT_URL + '?action=simpanAbsen&nama=' + encodeURIComponent(nama) + '&kelas=' + encodeURIComponent(selectedKelas))
+      .then(res => res.json())
+      .then(data => {
+        if (data.status === 'success') {
+          loadSiswa(selectedKelas);
         }
-
-        div.appendChild(namaSpan);
-        div.appendChild(btnAbsen);
-        container.appendChild(div);
       });
-    }
+  }
 
-    function lakukanAbsen(nama, btnElement) {
-      btnElement.disabled = true;
-      btnElement.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Mengirim...';
-
-      const targetUrl = `${API_URL}?action=simpanAbsen&nama=${encodeURIComponent(nama)}&kelas=${encodeURIComponent(kelasAktif)}`;
-
-      fetch(targetUrl)
+  function prosesSanksi(nama, statusSanksi) {
+    var konfirmasi = confirm('Konfirmasi Penyelesaian Sanksi:\n\nSiswa: ' + nama + '\nStatus: ' + statusSanksi + '\n\nApakah siswa ini SUDAH MELAKSANAKAN sanksi tersebut hari ini?');
+    
+    if (konfirmasi) {
+      fetch(SCRIPT_URL + '?action=selaikanSanksi&nama=' + encodeURIComponent(nama) + '&kelas=' + encodeURIComponent(selectedKelas))
         .then(res => res.json())
-        .then(res => {
-          if (res.status === 'success') {
-            btnElement.className = 'btn btn-success btn-absen';
-            btnElement.innerHTML = '<i class="fa-solid fa-check me-1"></i> Sudah Absen';
-            tampilkanAlert('success', '✓ Absen ' + nama + ' berhasil & WA terkirim!');
-          } else {
-            btnElement.disabled = false;
-            btnElement.innerHTML = 'Absen';
-            tampilkanAlert('danger', 'Gagal memproses absensi.');
-          }
-        })
-        .catch(err => {
-          btnElement.disabled = false;
-          btnElement.innerHTML = 'Absen';
-          tampilkanAlert('danger', 'Koneksi terputus.');
+        .then(data => {
+          alert('Sanksi untuk ' + nama + ' telah ditandai LUNAS/TUNTAS.');
+          loadSiswa(selectedKelas); // Refresh tampilan agar tombol sanksi otomatis HILANG
         });
     }
-
-    function tampilkanAlert(tipe, pesan) {
-      var alertBox = document.getElementById('alertBox');
-      alertBox.className = `alert alert-${tipe} alert-custom d-block`;
-      alertBox.innerHTML = pesan;
-
-      setTimeout(function() {
-        alertBox.className = "alert alert-custom d-none";
-      }, 3500);
-    }
-  </script>
+  }
+</script>
 
 </body>
 </html>
